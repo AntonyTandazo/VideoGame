@@ -1,0 +1,108 @@
+/* ========================================
+   Overlays (inicio, historia, pausa, game over)
+   ======================================== */
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(5, 5, 10, 0.82);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5rem;
+  z-index: 10;
+  text-align: center;
+  transition: opacity 0.3s ease;
+}
+
+.overlay.hidden {
+  display: none;
+  opacity: 0;
+}
+
+.overlay-contenido {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.25rem;
+  max-width: 90%;
+  padding: 1.5rem;
+}
+
+.overlay h1 {
+  font-size: 2.75rem;
+  margin: 0;
+  color: var(--color-neon-cian);
+  text-shadow: 0 0 20px rgba(0, 255, 255, 0.7), 0 0 40px rgba(166, 76, 166, 0.4);
+  letter-spacing: 0.06em;
+  animation: aparecer-titulo 0.5s ease both;
+}
+
+@keyframes aparecer-titulo {
+  from { transform: translateY(-12px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+/* Botones grandes de overlays */
+.btn-grande {
+  padding: 1rem 2.25rem;
+  font-size: 1.35rem;
+  font-weight: 700;
+  font-family: inherit;
+  color: #05050a;
+  background: var(--color-neon-cian);
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  box-shadow: 0 0 20px rgba(0, 255, 255, 0.55);
+  transition: transform 0.15s ease, background 0.2s ease, box-shadow 0.2s ease;
+}
+
+.btn-grande:hover {
+  background: #66fffe;
+  transform: translateY(-3px);
+  box-shadow: 0 0 30px rgba(0, 255, 255, 0.75);
+}
+
+.btn-grande:active {
+  transform: translateY(0);
+}
+
+.btn-grande:focus-visible {
+  outline: 3px solid var(--color-neon-cian);
+  outline-offset: 3px;
+}
+
+/* Valores finales en Game Over */
+#score-final,
+#tiempo-final {
+  margin: 0;
+  color: #fff;
+  font-size: 1.2rem;
+  text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+}
+
+#score-final {
+  color: var(--color-neon-cian);
+  font-weight: 700;
+}
+
+#tiempo-final {
+  color: #a6a6a6;
+  margin-bottom: 0.5rem;
+}
+
+/* Responsive overlays */
+@media (max-width: 640px) {
+  .overlay h1 {
+    font-size: 2rem;
+  }
+  .btn-grande {
+    width: 100%;
+    max-width: 260px;
+    padding: 0.9rem 1.5rem;
+    font-size: 1.2rem;
+  }
+}

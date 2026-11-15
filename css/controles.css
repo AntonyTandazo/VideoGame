@@ -1,0 +1,137 @@
+/* ========================================
+   Guía de controles (keycaps en CSS puro)
+   ========================================
+   Se usa en cuatro sitios: debajo del canvas durante la partida, en la
+   pantalla de inicio, antes de "Empezar viaje" y en el overlay de pausa.
+   No tapa ni redimensiona el HUD: es un bloque propio que fluye con el
+   layout del contenedor exterior. */
+
+.guia-controles {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem 1.25rem;
+  width: 100%;
+  max-width: min(96vw, 1400px);
+  padding: 0.45rem 1rem;
+  border: 1px solid var(--color-borde);
+  border-radius: var(--radio-panel);
+  background: var(--color-panel);
+  color: var(--color-texto);
+  transition: opacity var(--transicion-suave);
+  box-sizing: border-box;
+}
+
+/* Cada par "teclas + etiqueta" */
+.guia-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  white-space: nowrap;
+}
+
+.teclas {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+/* Keycap: fondo oscuro, borde, relieve y sombra interior.
+   Todo con CSS puro, sin imágenes ni fuentes externas. */
+.tecla {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2rem;
+  height: 2rem;
+  padding: 0 0.5rem;
+  border: 1px solid rgba(0, 255, 255, 0.45);
+  border-bottom-width: 3px;
+  border-radius: 6px;
+  background: linear-gradient(180deg, #1b1b2e 0%, #0c0c18 100%);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.18),
+              inset 0 -2px 4px rgba(0, 0, 0, 0.65),
+              0 0 8px rgba(0, 255, 255, 0.18);
+  color: var(--color-neon-cian);
+  font-family: inherit;
+  font-size: 0.95rem;
+  font-weight: 700;
+  line-height: 1;
+  text-shadow: 0 0 6px rgba(0, 255, 255, 0.5);
+}
+
+/* Barra ancha para la tecla ESPACIO */
+.tecla-ancha {
+  min-width: 6.5rem;
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+}
+
+.guia-texto {
+  color: var(--color-texto);
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+/* ========================================
+   Variante en partida: se atenúa y vuelve al pasar el mouse
+   ======================================== */
+
+#guia-controles.guia-atenuada {
+  opacity: 0.5;
+}
+
+/* Al pasar el mouse (o al enfocar con teclado) recupera la opacidad completa */
+#guia-controles.guia-atenuada:hover,
+#guia-controles.guia-atenuada:focus-within {
+  opacity: 1;
+}
+
+/* ========================================
+   Variante en overlays (inicio, historia, pausa)
+   ======================================== */
+
+.overlay .guia-controles {
+  background: rgba(12, 12, 24, 0.85);
+  gap: 0.5rem 1.25rem;
+}
+
+/* ========================================
+   Responsive
+   ======================================== */
+
+@media (max-width: 640px) {
+  .guia-controles {
+    gap: 0.45rem 0.9rem;
+    padding: 0.5rem 0.75rem;
+  }
+
+  .tecla {
+    min-width: 1.7rem;
+    height: 1.7rem;
+    padding: 0 0.4rem;
+    font-size: 0.85rem;
+  }
+
+  .tecla-ancha {
+    min-width: 4.8rem;
+    font-size: 0.62rem;
+  }
+
+  .guia-texto {
+    font-size: 0.7rem;
+  }
+}
+
+/* ========================================
+   Respeto por prefers-reduced-motion
+   ======================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  .guia-controles {
+    transition: none;
+  }
+}
