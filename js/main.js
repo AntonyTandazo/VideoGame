@@ -39,6 +39,7 @@ const avisoCuracionEl = document.getElementById("aviso-curacion");
 let avisoCuracionTimer = null; // timer único que reinicia la animación de curación
 
 let estado = "menu"; // "menu" | "historia" | "jugando" | "pausado" | "gameover"
+let inicioPausa = 0;
 
 const keys = {};
 window.addEventListener("keydown", (e) => {
@@ -59,6 +60,75 @@ const crawlFrase = document.getElementById("crawl-frase");
 const crawlTitulo = document.getElementById("crawl-titulo");
 const crawlTexto = document.getElementById("crawl-texto");
 const crawlBotones = document.querySelector(".crawl-botones");
+const prefiereMovimientoReducido = window.matchMedia("(prefers-reduced-motion: reduce)");
+let crawlTimeout = null;
+
+/* Lee una duración CSS (p. ej. "40s" o "40000ms") y la devuelve en ms */
+function leerDuracionCss(variable, respaldoMs) {
+  const valor = getComputedStyle(document.documentElement)
+    .getPropertyValue(variable)
+    .trim();
+  if (!valor) return respaldoMs;
+  const numero = parseFloat(valor);
+  if (Number.isNaN(numero)) return respaldoMs;
+  return valor.endsWith("ms") ? numero : numero * 1000;
+}
+
+/* Arranca (o reinicia) el crawl usando las duraciones definidas en :root.
+   Con prefers-reduced-motion muestra el texto estático y habilita el botón. */
+function iniciarCrawl() {
+  if (crawlTimeout) {
+    clearTimeout(crawlTimeout);
+    crawlTimeout = null;
+  }
+
+  btnEmpezarViaje.disabled = true;
+
+  // Resetear estado inline antes de reproducir de nuevo las animaciones
+  crawlFrase.style.animation = "none";
+  crawlTitulo.style.animation = "none";
+  crawlTexto.style.animation = "none";
+  crawlBotones.style.animation = "none";
+  crawlFrase.style.opacity = "0";
+  crawlFrase.style.transform = "scale(0.95)";
+  crawlTitulo.style.opacity = "0";
+  crawlTitulo.style.transform = "scale(0.5)";
+  crawlTexto.style.opacity = "0";
+  crawlBotones.style.opacity = "0";
+
+  // Forzar reflujo para que las animaciones se reinicien
+  void crawlFrase.offsetWidth;
+
+  if (prefiereMovimientoReducido.matches) {
+    crawlFrase.style.opacity = "1";
+    crawlFrase.style.transform = "none";
+    crawlTitulo.style.opacity = "1";
+    crawlTitulo.style.transform = "none";
+    crawlTexto.style.opacity = "1";
+    crawlBotones.style.opacity = "1";
+    btnEmpezarViaje.disabled = false;
+    return;
+  }
+
+  crawlFrase.style.animation = "frase-fade var(--duracion-frase) ease-in-out both";
+  crawlTitulo.style.animation = "titulo-alejarse var(--duracion-titulo) ease-in both";
+  crawlTexto.style.animation = "texto-subir var(--duracion-crawl) linear both";
+  crawlBotones.style.animation = "botones-aparecer var(--duracion-botones) ease forwards";
+
+  // Habilitar "Empezar viaje" al terminar el crawl o al saltar
+  crawlTimeout = setTimeout(() => {
+    crawlTimeout = null;
+    if (estado === "historia") {
+      btnEmpezarViaje.disabled = false;
+    }
+  }, leerDuracionCss("--duracion-crawl", 40000));
+}
+
+/* ---------- Referencias de power-ups activos ---------- */
+const powerupsHUD = {
+  escudo: document.getElementById("powerup-hud-escudo"),
+  disparo: document.getElementById("powerup-hud-disparo")
+};
 
 /* ---------- Actualizar HUD ---------- */
 function actualizarHUD() {
@@ -136,6 +206,62 @@ function actualizarHUD() {
   } else {
     subjefeVidaEl.classList.add("hidden");
   }
+
+  // Contadores de escudo y disparo activos
+  actualizarPowerUpsHUD();
+}
+
+/* ---------- Contadores de power-ups activos ---------- */
+/* Usa el mismo reloj (Date.now) y el mismo bucle que el juego: no hay
+   setInterval ni temporizadores independientes. */
+function actualizarTarjetaPowerUp(el, poder, nombre, ahora, enJuego) {
+  if (!el || !poder) return;
+
+  const activo = enJuego && poder.activo;
+  const restanteMs = poder.expiraEn - ahora;
+  const restanteSeg = Math.max(0, Math.ceil(restanteMs / 1000));
+
+  if (!activo || restanteMs <= 0) {
+    el.classList.remove("activo", "urgente");
+    el.setAttribute("aria-hidden", "true");
+    return;
+  }
+
+  const duracion = poder.duracion || 1;
+  const ratio = Math.max(0, Math.min(1, restanteMs / duracion));
+
+  el.classList.add("activo");
+  el.setAttribute("aria-hidden", "false");
+  el.classList.toggle("urgente", restanteSeg <= 3);
+  el.setAttribute(
+    "aria-label",
+    `${nombre} activo, ${restanteSeg} segundo${restanteSeg === 1 ? "" : "s"} restante${restanteSeg === 1 ? "" : "s"}`
+  );
+
+  el.querySelector(".powerup-hud-tiempo").textContent = `${restanteSeg}s`;
+  el.querySelector(".powerup-hud-relleno").style.transform = `scaleX(${ratio})`;
+}
+
+function actualizarPowerUpsHUD() {
+  const ahora = Date.now();
+  const enJuego = !game.gameOver && (estado === "jugando" || estado === "pausado");
+
+  actualizarTarjetaPowerUp(powerupsHUD.escudo, game.player.escudo, "Escudo", ahora, enJuego);
+  actualizarTarjetaPowerUp(
+    powerupsHUD.disparo,
+    game.player.disparoContinuo,
+    "Disparo",
+    ahora,
+    enJuego
+  );
+}
+
+function ocultarPowerUpsHUD() {
+  Object.values(powerupsHUD).forEach((el) => {
+    if (!el) return;
+    el.classList.remove("activo", "urgente");
+    el.setAttribute("aria-hidden", "true");
+  });
 }
 
 /* ---------- Avisos flotantes ---------- */
@@ -193,36 +319,7 @@ function mostrarHistoria() {
   pantallaPausa.classList.add("hidden");
   pantallaHistoria.classList.remove("hidden");
 
-  // Resetear crawl
-  btnEmpezarViaje.disabled = true;
-  crawlFrase.style.opacity = "0";
-  crawlFrase.style.transform = "scale(0.95)";
-  crawlTitulo.style.opacity = "0";
-  crawlTitulo.style.transform = "scale(0.5)";
-  crawlTexto.style.opacity = "0";
-  crawlBotones.style.opacity = "0";
-
-  // Forzar reflujo para que las animaciones se reinicien
-  void crawlFrase.offsetWidth;
-
-  crawlFrase.style.animation = "none";
-  crawlTitulo.style.animation = "none";
-  crawlTexto.style.animation = "none";
-  crawlBotones.style.animation = "none";
-
-  void crawlFrase.offsetWidth;
-
-  crawlFrase.style.animation = "frase-fade 6s ease-in-out both";
-  crawlTitulo.style.animation = "titulo-alejarse 8s ease-in both";
-  crawlTexto.style.animation = "texto-subir 22s linear both";
-  crawlBotones.style.animation = "botones-aparecer 10s ease forwards";
-
-  // Habilitar "Empezar viaje" al terminar el crawl (22s) o al saltar
-  setTimeout(() => {
-    if (estado === "historia") {
-      btnEmpezarViaje.disabled = false;
-    }
-  }, 22000);
+  iniciarCrawl();
 
   // La música arranca dentro del gesto del usuario (clic en "Jugar"),
   // que es lo que el navegador exige para permitir audio.
@@ -238,6 +335,7 @@ function saltarIntro() {
 
 function iniciarJuego() {
   estado = "jugando";
+  inicioPausa = 0;
   pantallaHistoria.classList.add("hidden");
   pantallaGameOver.classList.add("hidden");
   pantallaPausa.classList.add("hidden");
@@ -253,6 +351,8 @@ function iniciarJuego() {
 
 function mostrarGameOver() {
   estado = "gameover";
+  inicioPausa = 0;
+  ocultarPowerUpsHUD();
   scoreFinal.textContent = `Puntuación: ${game.score}`;
   tiempoFinal.textContent = `Tiempo sobrevivido: ${game.tiempoTranscurrido()}s`;
   pantallaGameOver.classList.remove("hidden");
@@ -268,8 +368,8 @@ function reiniciarJuego() {
   // Resetear el jugador a sus valores base (sin arrastrar bonos de vida ni poderes)
   game.player.maxVida = 120;
   game.player.vida = 120;
-  game.player.escudo = { activo: false, impactos: 4, expiraEn: 0 };
-  game.player.disparoContinuo = { activo: false, expiraEn: 0 };
+  game.player.escudo = { activo: false, impactos: 4, expiraEn: 0, duracion: 15000 };
+  game.player.disparoContinuo = { activo: false, expiraEn: 0, duracion: 20000 };
   game.player.ultimoDisparo = 0;
   delete game.player.factorDañoDisparo;
   game.player.x = canvas.width / 2 - game.player.width / 2;
@@ -324,21 +424,8 @@ function reiniciarJuego() {
   pantallaHistoria.classList.remove("hidden");
   estado = "historia";
 
-  // Reiniciar crawl
-  btnEmpezarViaje.disabled = true;
-  crawlFrase.style.animation = "none";
-  crawlTitulo.style.animation = "none";
-  crawlTexto.style.animation = "none";
-  crawlBotones.style.animation = "none";
-  void crawlFrase.offsetWidth;
-  crawlFrase.style.animation = "frase-fade 6s ease-in-out both";
-  crawlTitulo.style.animation = "titulo-alejarse 8s ease-in both";
-  crawlTexto.style.animation = "texto-subir 22s linear both";
-  crawlBotones.style.animation = "botones-aparecer 10s ease forwards";
-
-  setTimeout(() => {
-    if (estado === "historia") btnEmpezarViaje.disabled = false;
-  }, 22000);
+  ocultarPowerUpsHUD();
+  iniciarCrawl();
 
   sound.iniciar();
   sound.cambiarMusica("menu");
@@ -347,6 +434,7 @@ function reiniciarJuego() {
 function pausarJuego() {
   if (estado !== "jugando") return;
   estado = "pausado";
+  inicioPausa = Date.now();
   pantallaPausa.classList.remove("hidden");
   sound.pausar();          // recuerda el paso exacto del secuenciador
   mostrarGuiaCompleta();   // en pausa la guía se ve entera
@@ -354,6 +442,18 @@ function pausarJuego() {
 
 function reanudarJuego() {
   if (estado !== "pausado") return;
+
+  // Congelar los power-ups durante la pausa: se desplaza su vencimiento
+  // exactamente el tiempo que estuvo pausado el juego.
+  const duracionPausa = inicioPausa ? Date.now() - inicioPausa : 0;
+  if (duracionPausa > 0) {
+    if (game.player.escudo.activo) game.player.escudo.expiraEn += duracionPausa;
+    if (game.player.disparoContinuo.activo) {
+      game.player.disparoContinuo.expiraEn += duracionPausa;
+    }
+  }
+  inicioPausa = 0;
+
   estado = "jugando";
   // Evitar que el tiempo transcurrido durante la pausa se acumule al cronómetro de jefes
   game.ultimoTiempoJuego = Date.now();

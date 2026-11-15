@@ -15,9 +15,9 @@ export default class Player {
     this.maxVida = 120;
     this.vida = 120;
 
-    // Poderes
-    this.escudo = { activo: false, impactos: 4, expiraEn: 0 };
-    this.disparoContinuo = { activo: false, expiraEn: 0 };
+    // Poderes (duracion = tiempo total activo, para la barra del HUD)
+    this.escudo = { activo: false, impactos: 4, expiraEn: 0, duracion: 15000 };
+    this.disparoContinuo = { activo: false, expiraEn: 0, duracion: 20000 };
 
     // Disparo
     this.ultimoDisparo = 0;
@@ -68,12 +68,12 @@ export default class Player {
   activarEscudo(tiempoActual) {
     this.escudo.activo = true;
     this.escudo.impactos = 4;
-    this.escudo.expiraEn = tiempoActual + 15000; // 15 segundos
+    this.escudo.expiraEn = tiempoActual + this.escudo.duracion; // 15 segundos
   }
 
   activarDisparoContinuo(tiempoActual) {
     this.disparoContinuo.activo = true;
-    this.disparoContinuo.expiraEn = tiempoActual + 20000; // 20 segundos
+    this.disparoContinuo.expiraEn = tiempoActual + this.disparoContinuo.duracion; // 20 segundos
   }
 
   draw(ctx) {

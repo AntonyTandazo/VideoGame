@@ -178,6 +178,125 @@
   box-shadow: 0 0 8px var(--color-subjefe);
 }
 
+/* ========================================
+   Contadores de power-ups activos
+   (columna vertical en la esquina superior derecha dentro del área de juego)
+   ======================================== */
+.powerups-activos {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+  z-index: 5;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.4rem;
+  pointer-events: none;
+}
+
+.powerup-hud {
+  --powerup-color: var(--color-powerup-escudo);
+  --powerup-glow: rgba(0, 229, 255, 0.35);
+  --powerup-borde: rgba(0, 229, 255, 0.45);
+
+  display: grid;
+  grid-template-columns: auto 1fr;
+  grid-template-areas:
+    "icon info"
+    "bar bar";
+  align-items: center;
+  gap: 0.2rem 0.45rem;
+  min-width: 118px;
+  padding: 0.35rem 0.55rem 0.45rem;
+  border-radius: 8px;
+  background: rgba(12, 12, 24, 0.9);
+  border: 1px solid var(--powerup-borde);
+  box-shadow: 0 0 10px var(--powerup-glow);
+  opacity: 0;
+  transform: translateX(8px) scale(0.96);
+  visibility: hidden;
+  transition: opacity 0.25s ease, transform 0.25s ease, visibility 0.25s ease;
+  will-change: opacity, transform;
+}
+
+.powerup-hud[data-tipo="disparo"] {
+  --powerup-color: var(--color-powerup-disparo);
+  --powerup-glow: rgba(255, 213, 74, 0.35);
+  --powerup-borde: rgba(255, 213, 74, 0.45);
+}
+
+.powerup-hud.activo {
+  opacity: 0.9;
+  transform: translateX(0) scale(1);
+  visibility: visible;
+}
+
+.powerup-hud-icon {
+  grid-area: icon;
+  width: 30px;
+  height: 18px;
+  object-fit: contain;
+  filter: drop-shadow(0 0 4px var(--powerup-glow));
+}
+
+.powerup-hud-info {
+  grid-area: info;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  line-height: 1.1;
+}
+
+.powerup-hud-nombre {
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: rgba(255, 255, 255, 0.65);
+}
+
+.powerup-hud-tiempo {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--powerup-color);
+  text-shadow: 0 0 6px var(--powerup-glow);
+}
+
+.powerup-hud-barra {
+  grid-area: bar;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.powerup-hud-relleno {
+  width: 100%;
+  height: 100%;
+  transform: scaleX(1);
+  transform-origin: left center;
+  background: var(--powerup-color);
+  box-shadow: 0 0 6px var(--powerup-glow);
+}
+
+/* Últimos 3 segundos: la tarjeta parpadea y la barra pasa a rojo/naranja */
+.powerup-hud.urgente .powerup-hud-barra {
+  background: rgba(255, 107, 61, 0.2);
+}
+
+.powerup-hud.urgente .powerup-hud-relleno {
+  background: #ff6b3d;
+  box-shadow: 0 0 6px rgba(255, 107, 61, 0.8);
+}
+
+.powerup-hud.urgente {
+  animation: powerup-parpadeo 0.9s ease-in-out infinite;
+}
+
+@keyframes powerup-parpadeo {
+  0%, 100% { opacity: 0.9; }
+  50% { opacity: 0.5; }
+}
+
 /* Responsive HUD */
 @media (max-width: 640px) {
   .hud {
@@ -194,6 +313,22 @@
   .vida-card {
     min-width: 150px;
   }
+  .powerups-activos {
+    top: 0.45rem;
+    right: 0.45rem;
+    gap: 0.3rem;
+  }
+  .powerup-hud {
+    min-width: 100px;
+    padding: 0.28rem 0.45rem 0.38rem;
+  }
+  .powerup-hud-icon {
+    width: 24px;
+    height: 14px;
+  }
+  .powerup-hud-tiempo {
+    font-size: 0.85rem;
+  }
 }
 
 /* Accesibilidad: sin animaciones si el sistema lo pide */
@@ -201,10 +336,14 @@
   .hud-card.puntos-card.pulse,
   .hud-card.daño,
   .hud-card.curacion,
-  .hud-card.curacion::after {
+  .hud-card.curacion::after,
+  .powerup-hud.urgente {
     animation: none;
   }
   .relleno-vida {
+    transition: none;
+  }
+  .powerup-hud {
     transition: none;
   }
 }

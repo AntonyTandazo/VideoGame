@@ -18,6 +18,33 @@
     <!-- Marco con resplandor alrededor del canvas (sin tocar el canvas) -->
     <div class="juego-marco">
       <canvas id="juego" width="960" height="600"></canvas>
+
+      <!-- Contadores de power-ups activos (esquina superior derecha, dentro del área de juego) -->
+      <div class="powerups-activos" id="powerups-activos" aria-live="off">
+        <div class="powerup-hud" id="powerup-hud-escudo" data-tipo="escudo"
+             role="group" aria-live="off" aria-hidden="true" aria-label="Escudo activo, 15 segundos restantes">
+          <img class="powerup-hud-icon" src="assets/images/power-escudo.svg" alt="" aria-hidden="true" />
+          <div class="powerup-hud-info">
+            <span class="powerup-hud-nombre">ESCUDO</span>
+            <span class="powerup-hud-tiempo">15s</span>
+          </div>
+          <div class="powerup-hud-barra" aria-hidden="true">
+            <div class="powerup-hud-relleno"></div>
+          </div>
+        </div>
+
+        <div class="powerup-hud" id="powerup-hud-disparo" data-tipo="disparo"
+             role="group" aria-live="off" aria-hidden="true" aria-label="Disparo activo, 20 segundos restantes">
+          <img class="powerup-hud-icon" src="assets/images/power-discontinuo.svg" alt="" aria-hidden="true" />
+          <div class="powerup-hud-info">
+            <span class="powerup-hud-nombre">DISPARO</span>
+            <span class="powerup-hud-tiempo">20s</span>
+          </div>
+          <div class="powerup-hud-barra" aria-hidden="true">
+            <div class="powerup-hud-relleno"></div>
+          </div>
+        </div>
+      </div>
     </div>
 
     <!-- Guía de controles en partida (debajo del canvas, sin tapar el HUD) -->
