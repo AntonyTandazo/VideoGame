@@ -23,10 +23,14 @@
   --transicion-suave: 0.25s ease;
 
   /* Duraciones del crawl de historia (ajustables desde :root) */
-  --duracion-crawl: 40s;
-  --duracion-frase: 10s;
-  --duracion-titulo: 14s;
-  --duracion-botones: 18s;
+  --duracion-crawl: 40s;      /* antes: 22s  (~1.8x más lento) */
+  --duracion-frase: 9s;       /* antes: 6s   (~1.5x más larga) */
+  --duracion-titulo: 12s;     /* antes: 8s   (~1.5x más larga) */
+  --duracion-botones: 10s;    /* mismo fade que antes */
+
+  /* Colores de los power-ups con duración */
+  --color-powerup-escudo: #00e5ff;
+  --color-powerup-disparo: #ffd54a;
 }
 
 /* ========================================

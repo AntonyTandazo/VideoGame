@@ -42,7 +42,7 @@
   z-index: 2;
   padding: 0 1rem;
   max-width: 80%;
-  animation: frase-fade 6s ease-in-out both;
+  animation: frase-fade var(--duracion-frase) ease-in-out both;
 }
 
 @keyframes frase-fade {
@@ -65,7 +65,7 @@
   padding: 0 1rem;
   max-width: 90%;
   text-shadow: 0 0 20px rgba(255, 230, 0, 0.8), 0 0 40px rgba(166, 76, 166, 0.4);
-  animation: titulo-alejarse 8s ease-in both;
+  animation: titulo-alejarse var(--duracion-titulo) ease-in both;
   transform-origin: center;
 }
 
@@ -89,7 +89,7 @@
   line-height: 1.8;
   transform: rotateX(25deg) translateZ(-100px);
   transform-origin: bottom;
-  animation: texto-subir 22s linear both;
+  animation: texto-subir var(--duracion-crawl) linear both;
   opacity: 0;
 }
 
@@ -137,7 +137,7 @@
 /* Botones debajo del crawl */
 .crawl-botones {
   margin-top: 2rem;
-  animation: botones-aparecer 10s ease forwards;
+  animation: botones-aparecer var(--duracion-botones) ease forwards;
   opacity: 0;
 }
 
