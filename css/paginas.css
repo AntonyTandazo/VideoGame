@@ -1,0 +1,391 @@
+/* ========================================
+   Estilos compartidos para páginas adicionales
+   (galería, contacto) y navegación del sitio
+   ======================================== */
+
+.cabecera-sitio {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.75rem 1rem;
+  background: rgba(10, 10, 20, 0.9);
+  backdrop-filter: blur(6px);
+  border-bottom: 1px solid var(--color-borde);
+  flex-wrap: wrap;
+}
+
+.cabecera-sitio .logo {
+  color: var(--color-neon-cian);
+  text-decoration: none;
+  font-weight: bold;
+  font-size: 1.25rem;
+  letter-spacing: 0.05em;
+  white-space: nowrap;
+}
+
+.cabecera-sitio .logo:hover {
+  color: var(--color-texto);
+}
+
+.cabecera-sitio nav {
+  display: flex;
+  gap: 1.5rem;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.cabecera-sitio nav a {
+  color: var(--color-texto);
+  text-decoration: none;
+  font-size: 0.95rem;
+  padding: 0.4rem 0.6rem;
+  border-radius: 4px;
+  transition: color var(--transicion-suave), background var(--transicion-suave);
+}
+
+.cabecera-sitio nav a:hover,
+.cabecera-sitio nav a[aria-current="page"] {
+  color: var(--color-neon-cian);
+  background: rgba(0, 255, 255, 0.1);
+}
+
+/* Botón hamburguesa (solo móvil) */
+.btn-menu {
+  display: none;
+  background: none;
+  border: 1px solid var(--color-borde);
+  color: var(--color-texto);
+  font-size: 1.5rem;
+  padding: 0.35rem 0.5rem;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.btn-menu:hover {
+  background: rgba(0, 255, 255, 0.1);
+}
+
+.cabecera-sitio nav[hidden] {
+  display: none;
+}
+
+@media (pointer: coarse) and (max-width: 768px) {
+  .btn-menu {
+    display: block;
+  }
+
+  .cabecera-sitio {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .cabecera-sitio .logo {
+    order: 1;
+    text-align: center;
+    margin-bottom: 0.5rem;
+  }
+
+  .btn-menu {
+    order: 2;
+    align-self: flex-end;
+    margin-bottom: 0.5rem;
+  }
+
+  .cabecera-sitio nav {
+    order: 3;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.5rem;
+    width: 100%;
+    padding-top: 0.5rem;
+    border-top: 1px solid var(--color-borde);
+  }
+
+  .cabecera-sitio nav a {
+    display: block;
+    text-align: center;
+    padding: 0.6rem;
+  }
+}
+
+/* ========================================
+   Galería
+   ======================================== */
+
+.galeria-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 1.25rem;
+  padding: 1rem;
+}
+
+.tarjeta {
+  background: var(--color-panel);
+  border: 1px solid var(--color-borde);
+  border-radius: var(--radio-panel);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: transform var(--transicion-suave), box-shadow var(--transicion-suave);
+  cursor: pointer;
+}
+
+.tarjeta:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--color-sombra-glow);
+  border-color: var(--color-neon-cian);
+}
+
+.tarjeta img {
+  width: 100%;
+  height: 140px;
+  object-fit: contain;
+  background: #000;
+  display: block;
+}
+
+.tarjeta-info {
+  padding: 0.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.tarjeta h3 {
+  margin: 0;
+  font-size: 0.95rem;
+  color: var(--color-texto);
+}
+
+.tarjeta p {
+  margin: 0;
+  font-size: 0.8rem;
+  color: #a0a0a0;
+  line-height: 1.4;
+}
+
+/* Modal de detalle */
+.modal {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.85);
+  padding: 1rem;
+}
+
+.modal.abierta {
+  display: flex;
+}
+
+.modal-contenido {
+  background: var(--color-panel);
+  border: 1px solid var(--color-borde);
+  border-radius: var(--radio-panel);
+  padding: 1.5rem;
+  max-width: 640px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  position: relative;
+}
+
+.modal-cerrar {
+  position: absolute;
+  top: 0.75rem;
+  right: 1rem;
+  background: none;
+  border: none;
+  color: var(--color-texto);
+  font-size: 1.75rem;
+  cursor: pointer;
+  line-height: 1;
+}
+
+.modal img {
+  width: 100%;
+  max-height: 360px;
+  object-fit: contain;
+  margin: 1rem 0;
+  background: #000;
+  border-radius: 8px;
+}
+
+.btn-cerrar-modal {
+  margin-top: 1rem;
+  padding: 0.6rem 1.2rem;
+  background: var(--color-neon-cian);
+  color: #000;
+  border: none;
+  border-radius: 4px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.btn-cerrar-modal:hover {
+  filter: brightness(1.1);
+}
+
+/* Navegación anterior/siguiente */
+.navegacion-galeria {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.75rem 1rem;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.btn-galeria {
+  background: var(--color-panel);
+  border: 1px solid var(--color-borde);
+  color: var(--color-texto);
+  padding: 0.6rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.btn-galeria:hover {
+  border-color: var(--color-neon-cian);
+  color: var(--color-neon-cian);
+}
+
+/* ========================================
+   Formulario de contacto
+   ======================================== */
+
+.formulario-contacto {
+  max-width: 600px;
+  margin: 0 auto;
+  background: var(--color-panel);
+  border: 1px solid var(--color-borde);
+  border-radius: var(--radio-panel);
+  padding: 1.5rem;
+}
+
+.campo {
+  margin-bottom: 1rem;
+}
+
+.campo label {
+  display: block;
+  margin-bottom: 0.4rem;
+  font-size: 0.9rem;
+  color: var(--color-texto);
+}
+
+.campo input,
+.campo textarea {
+  width: 100%;
+  padding: 0.6rem;
+  border: 1px solid var(--color-borde);
+  border-radius: 4px;
+  background: rgba(0, 0, 0, 0.4);
+  color: var(--color-texto);
+  font-family: inherit;
+  font-size: 0.95rem;
+  box-sizing: border-box;
+}
+
+.campo input:focus,
+.campo textarea:focus {
+  outline: none;
+  border-color: var(--color-neon-cian);
+  box-shadow: 0 0 0 2px rgba(0, 255, 255, 0.2);
+}
+
+.campo input.invalido,
+.campo textarea.invalido {
+  border-color: #ff4444;
+}
+
+.mensaje-error {
+  color: #ff4444;
+  font-size: 0.8rem;
+  margin-top: 0.3rem;
+  display: none;
+}
+
+.campo.invalido .mensaje-error {
+  display: block;
+}
+
+#estado-formulario {
+  margin-top: 1rem;
+  font-size: 0.95rem;
+  min-height: 1.4em;
+}
+
+#estado-formulario.exito {
+  color: #00ff41;
+}
+
+#estado-formulario.error {
+  color: #ff4444;
+}
+
+button[type="submit"] {
+  background: var(--color-neon-cian);
+  color: #000;
+  border: none;
+  padding: 0.7rem 1.5rem;
+  border-radius: 4px;
+  font-weight: bold;
+  font-size: 1rem;
+  cursor: pointer;
+  width: 100%;
+}
+
+button[type="submit"]:hover {
+  filter: brightness(1.1);
+}
+
+button[type="submit"]:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* ========================================
+   Responsivo páginas de contenido
+   ======================================== */
+
+main {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+  min-height: 60vh;
+}
+
+main section h1 {
+  font-size: 1.75rem;
+  color: var(--color-neon-cian);
+  margin-bottom: 1.5rem;
+}
+
+.pie-sitio {
+  text-align: center;
+  padding: 1.5rem;
+  font-size: 0.85rem;
+  color: #888;
+  border-top: 1px solid var(--color-borde);
+  background: rgba(10, 10, 20, 0.6);
+}
+
+@media (max-width: 640px) {
+  main {
+    padding: 1.25rem 0.75rem;
+  }
+
+  main section h1 {
+    font-size: 1.4rem;
+  }
+
+  .formulario-contacto {
+    padding: 1rem;
+  }
+}

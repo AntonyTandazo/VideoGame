@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Contacto · Juego de Naves 2D</title>
+  <link rel="stylesheet" href="css/base.css" />
+  <link rel="stylesheet" href="css/ui.css" />
+  <link rel="stylesheet" href="css/overlay.css" />
+  <link rel="stylesheet" href="css/historia.css" />
+  <link rel="stylesheet" href="css/controles.css" />
+  <link rel="stylesheet" href="css/paginas.css" />
+  <link rel="icon" href="assets/images/icono-juego.svg" type="image/svg+xml" />
+</head>
+<body>
+  <header class="cabecera-sitio">
+    <a class="logo" href="index.html" aria-label="Página principal">Juego de Naves</a>
+    <button class="btn-menu" id="btn-menu" aria-label="Abrir menú de navegación" aria-expanded="false">☰</button>
+    <nav aria-label="Navegación principal" id="nav-principal">
+      <a href="index.html">Jugar</a>
+      <a href="galeria.html">Galería</a>
+      <a href="contacto.html" aria-current="page">Contacto</a>
+    </nav>
+  </header>
+
+  <main>
+    <section aria-labelledby="titulo-contacto">
+      <h1 id="titulo-contacto">Contacto</h1>
+      <p style="color:#a0a0a0; margin-bottom:1.5rem;">Escribinos para consultas, sugerencias o comentarios sobre el juego.</p>
+
+      <form id="form-contacto" class="formulario-contacto" novalidate>
+        <div class="campo">
+          <label for="nombre">Nombre</label>
+          <input id="nombre" name="nombre" type="text" required minlength="3" placeholder="Tu nombre" />
+          <span class="mensaje-error" id="error-nombre">El nombre debe tener al menos 3 caracteres.</span>
+        </div>
+
+        <div class="campo">
+          <label for="email">Correo electrónico</label>
+          <input id="email" name="email" type="email" required placeholder="tu@correo.com" />
+          <span class="mensaje-error" id="error-email">Ingresá un correo válido.</span>
+        </div>
+
+        <div class="campo">
+          <label for="mensaje">Mensaje</label>
+          <textarea id="mensaje" name="mensaje" required minlength="10" placeholder="Tu mensaje..."></textarea>
+          <span class="mensaje-error" id="error-mensaje">El mensaje debe tener al menos 10 caracteres.</span>
+        </div>
+
+        <button type="submit">Enviar mensaje</button>
+        <p id="estado-formulario" aria-live="polite"></p>
+      </form>
+    </section>
+  </main>
+
+  <footer class="pie-sitio">
+    <p>Proyecto de Desarrollo de Aplicaciones Web · 2026</p>
+  </footer>
+
+  <script src="js/contacto.js"></script>
+
+  <script>
+    // Menú hamburguesa
+    const btnMenu = document.getElementById('btn-menu');
+    const nav = document.getElementById('nav-principal');
+    if (btnMenu && nav) {
+      btnMenu.addEventListener('click', () => {
+        const abierto = btnMenu.getAttribute('aria-expanded') === 'true';
+        btnMenu.setAttribute('aria-expanded', String(!abierto));
+        nav.hidden = abierto;
+      });
+    }
+  </script>
+</body>
+</html>

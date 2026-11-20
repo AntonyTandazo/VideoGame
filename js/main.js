@@ -42,7 +42,13 @@ let estado = "menu"; // "menu" | "historia" | "jugando" | "pausado" | "gameover"
 let inicioPausa = 0;
 
 const keys = {};
+const TECLAS_JUEGO = [" ", "ArrowLeft", "ArrowRight", "a", "d", "A", "D"];
+
 window.addEventListener("keydown", (e) => {
+  // Evitar que el navegador haga scroll con las teclas de control del juego
+  if (TECLAS_JUEGO.includes(e.key)) {
+    e.preventDefault();
+  }
   keys[e.key] = true;
 });
 window.addEventListener("keyup", (e) => {

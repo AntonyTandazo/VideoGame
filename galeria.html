@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Galería · Juego de Naves 2D</title>
+  <link rel="stylesheet" href="css/base.css" />
+  <link rel="stylesheet" href="css/ui.css" />
+  <link rel="stylesheet" href="css/overlay.css" />
+  <link rel="stylesheet" href="css/historia.css" />
+  <link rel="stylesheet" href="css/controles.css" />
+  <link rel="stylesheet" href="css/paginas.css" />
+  <link rel="icon" href="assets/images/icono-juego.svg" type="image/svg+xml" />
+</head>
+<body>
+  <header class="cabecera-sitio">
+    <a class="logo" href="index.html" aria-label="Página principal">Juego de Naves</a>
+    <button class="btn-menu" id="btn-menu" aria-label="Abrir menú de navegación" aria-expanded="false">☰</button>
+    <nav aria-label="Navegación principal" id="nav-principal">
+      <a href="index.html">Jugar</a>
+      <a href="galeria.html" aria-current="page">Galería</a>
+      <a href="contacto.html">Contacto</a>
+    </nav>
+  </header>
+
+  <main>
+    <section aria-labelledby="titulo-galeria">
+      <h1 id="titulo-galeria">Galería de naves y power-ups</h1>
+      <p style="color:#a0a0a0; margin-bottom:1.5rem;">Elementos del juego: nave del jugador, enemigos, jefes, meteoritos y power-ups.</p>
+
+      <div class="navegacion-galeria">
+        <button class="btn-galeria" id="btn-galeria-anterior" aria-label="Anterior">◀ Anterior</button>
+        <button class="btn-galeria" id="btn-galeria-siguiente" aria-label="Siguiente">Siguiente ▶</button>
+      </div>
+
+      <div class="galeria-grid" id="galeria-grid">
+        <!-- Tarjetas insertadas por JS -->
+      </div>
+    </section>
+  </main>
+
+  <footer class="pie-sitio">
+    <p>Proyecto de Desarrollo de Aplicaciones Web · 2026</p>
+  </footer>
+
+  <div class="modal" id="modal-galeria">
+    <button class="modal-cerrar" id="btn-cerrar-modal" aria-label="Cerrar detalle">✕</button>
+    <div class="modal-contenido" id="modal-contenido">
+      <img id="modal-imagen" src="" alt="" />
+      <h2 id="modal-titulo"></h2>
+      <p id="modal-descripcion"></p>
+      <button class="btn-cerrar-modal" id="btn-cerrar-modal-2">Cerrar</button>
+    </div>
+  </div>
+
+  <script>
+    const items = [
+      {
+        src: 'assets/images/Nave-espacial.svg',
+        alt: 'Nave del jugador',
+        titulo: 'Nave del jugador',
+        descripcion: 'Nave comandada por Odiseo. Se mueve con flechas o A/D y dispara con ESPACIO.'
+      },
+      {
+        src: 'assets/images/navecita_enemiga.svg',
+        alt: 'Nave enemiga',
+        titulo: 'Nave enemiga',
+        descripcion: 'Nave estándar con 100 HP que dispara hacia abajo y suelta power-ups al caer.'
+      },
+      {
+        src: 'assets/images/nave-subjefe.svg',
+        alt: 'Sub-jefe',
+        titulo: 'Sub-jefe',
+        descripcion: 'Enemigo más poderoso. Hay 5 por ciclo y cada uno derrotado restaura vida.'
+      },
+      {
+        src: 'assets/images/nave-enemiga-jefe.svg',
+        alt: 'Jefe',
+        titulo: 'Jefe',
+        descripcion: 'Jefe de la flota enemiga, el obstáculo final antes de llegar a casa.'
+      },
+      {
+        src: 'assets/images/roca-espacial.svg',
+        alt: 'Meteorito',
+        titulo: 'Meteorito',
+        descripcion: 'Obstáculo que daña al jugador al chocar.'
+      },
+      {
+        src: 'assets/images/power-escudo.svg',
+        alt: 'Power-up escudo',
+        titulo: 'Escudo',
+        descripcion: 'Absorbe 4 impactos y dura 15 segundos.'
+      },
+      {
+        src: 'assets/images/power-discontinuo.svg',
+        alt: 'Power-up disparo continuo',
+        titulo: 'Disparo continuo',
+        descripcion: 'Permite disparar muy rápido durante 20 segundos.'
+      },
+      {
+        src: 'assets/images/power-extralife.svg',
+        alt: 'Power-up vida extra',
+        titulo: 'Vida extra',
+        descripcion: 'Recupera 1 vida al jugador.'
+      }
+    ];
+
+    const grid = document.getElementById('galeria-grid');
+    const modal = document.getElementById('modal-galeria');
+    const modalImg = document.getElementById('modal-imagen');
+    const modalTitulo = document.getElementById('modal-titulo');
+    const modalDesc = document.getElementById('modal-descripcion');
+    const btnCerrar = document.getElementById('btn-cerrar-modal');
+    const btnCerrar2 = document.getElementById('btn-cerrar-modal-2');
+
+    let indiceActual = 0;
+
+    function renderizar() {
+      grid.innerHTML = '';
+      items.forEach((item, i) => {
+        const article = document.createElement('article');
+        article.className = 'tarjeta';
+        article.tabIndex = 0;
+        article.setAttribute('aria-label', item.titulo);
+        article.innerHTML = `
+          <img src="${item.src}" alt="${item.alt}" loading="lazy" />
+          <div class="tarjeta-info">
+            <h3>${item.titulo}</h3>
+            <p>${item.descripcion}</p>
+          </div>
+        `;
+        article.addEventListener('click', () => abrirModal(i));
+        article.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            abrirModal(i);
+          }
+        });
+        grid.appendChild(article);
+      });
+    }
+
+    function abrirModal(i) {
+      indiceActual = i;
+      const item = items[indiceActual];
+      modalImg.src = item.src;
+      modalImg.alt = item.alt;
+      modalTitulo.textContent = item.titulo;
+      modalDesc.textContent = item.descripcion;
+      modal.classList.add('abierta');
+      modal.setAttribute('aria-hidden', 'false');
+      btnCerrar.focus();
+    }
+
+    function cerrarModal() {
+      modal.classList.remove('abierta');
+      modal.setAttribute('aria-hidden', 'true');
+    }
+
+    btnCerrar.addEventListener('click', cerrarModal);
+    btnCerrar2.addEventListener('click', cerrarModal);
+
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) cerrarModal();
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (!modal.classList.contains('abierta')) return;
+      if (e.key === 'Escape') cerrarModal();
+      if (e.key === 'ArrowLeft') {
+        indiceActual = (indiceActual - 1 + items.length) % items.length;
+        abrirModal(indiceActual);
+      }
+      if (e.key === 'ArrowRight') {
+        indiceActual = (indiceActual + 1) % items.length;
+        abrirModal(indiceActual);
+      }
+    });
+
+    document.getElementById('btn-galeria-anterior').addEventListener('click', () => {
+      indiceActual = (indiceActual - 1 + items.length) % items.length;
+      abrirModal(indiceActual);
+    });
+    document.getElementById('btn-galeria-siguiente').addEventListener('click', () => {
+      indiceActual = (indiceActual + 1) % items.length;
+      abrirModal(indiceActual);
+    });
+
+    renderizar();
+
+    // Menú hamburguesa
+    const btnMenu = document.getElementById('btn-menu');
+    const nav = document.getElementById('nav-principal');
+    if (btnMenu && nav) {
+      btnMenu.addEventListener('click', () => {
+        const abierto = btnMenu.getAttribute('aria-expanded') === 'true';
+        btnMenu.setAttribute('aria-expanded', String(!abierto));
+        nav.hidden = abierto;
+      });
+    }
+  </script>
+</body>
+</html>

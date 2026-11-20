@@ -9,160 +9,34 @@
   <link rel="stylesheet" href="css/overlay.css" />
   <link rel="stylesheet" href="css/historia.css" />
   <link rel="stylesheet" href="css/controles.css" />
+  <link rel="stylesheet" href="css/paginas.css" />
   <link rel="icon" href="assets/images/icono-juego.svg" type="image/svg+xml" />
 </head>
 <body>
-  <!-- Contenedor exterior: fondo espacial y centrado -->
-  <div class="contenedor-exterior">
+  <header class="cabecera-sitio">
+    <a class="logo" href="index.html" aria-label="Página principal">Juego de Naves</a>
+    <button class="btn-menu" id="btn-menu" aria-label="Abrir menú de navegación" aria-expanded="false">☰</button>
+    <nav aria-label="Navegación principal" id="nav-principal">
+      <a href="index.html" aria-current="page">Jugar</a>
+      <a href="galeria.html">Galería</a>
+      <a href="contacto.html">Contacto</a>
+    </nav>
+  </header>
+
+  <main>
+    <section aria-labelledby="titulo-juego">
+      <h1 id="titulo-juego">Juego de Naves</h1>
+
+      <!-- Contenedor exterior: fondo espacial y centrado -->
+      <div class="contenedor-exterior">
 
     <!-- Marco con resplandor alrededor del canvas (sin tocar el canvas) -->
     <div class="juego-marco">
       <canvas id="juego" width="960" height="600"></canvas>
-
-      <!-- Contadores de power-ups activos (esquina superior derecha, dentro del área de juego) -->
-      <div class="powerups-activos" id="powerups-activos" aria-live="off">
-        <div class="powerup-hud" id="powerup-hud-escudo" data-tipo="escudo"
-             role="group" aria-live="off" aria-hidden="true" aria-label="Escudo activo, 15 segundos restantes">
-          <img class="powerup-hud-icon" src="assets/images/power-escudo.svg" alt="" aria-hidden="true" />
-          <div class="powerup-hud-info">
-            <span class="powerup-hud-nombre">ESCUDO</span>
-            <span class="powerup-hud-tiempo">15s</span>
-          </div>
-          <div class="powerup-hud-barra" aria-hidden="true">
-            <div class="powerup-hud-relleno"></div>
-          </div>
-        </div>
-
-        <div class="powerup-hud" id="powerup-hud-disparo" data-tipo="disparo"
-             role="group" aria-live="off" aria-hidden="true" aria-label="Disparo activo, 20 segundos restantes">
-          <img class="powerup-hud-icon" src="assets/images/power-discontinuo.svg" alt="" aria-hidden="true" />
-          <div class="powerup-hud-info">
-            <span class="powerup-hud-nombre">DISPARO</span>
-            <span class="powerup-hud-tiempo">20s</span>
-          </div>
-          <div class="powerup-hud-barra" aria-hidden="true">
-            <div class="powerup-hud-relleno"></div>
-          </div>
-        </div>
-      </div>
     </div>
 
-    <!-- Guía de controles en partida (debajo del canvas, sin tapar el HUD) -->
-    <div class="guia-controles" id="guia-controles" role="group"
-         aria-label="Controles: ← → Mover, ESPACIO Disparar. También se puede mover con A y D.">
-      <span class="guia-item">
-        <span class="teclas">
-          <kbd class="tecla">←</kbd>
-          <kbd class="tecla">→</kbd>
-        </span>
-        <span class="guia-texto">Mover</span>
-      </span>
-      <span class="guia-item">
-        <kbd class="tecla tecla-ancha">ESPACIO</kbd>
-        <span class="guia-texto">Disparar</span>
-      </span>
-      <span class="guia-item">
-        <span class="teclas">
-          <kbd class="tecla">A</kbd>
-          <kbd class="tecla">D</kbd>
-        </span>
-        <span class="guia-texto">Alternativa</span>
-      </span>
-    </div>
-
-    <!-- HUD inferior sci-fi/arcade -->
-    <div class="hud" id="hud">
-      <div class="hud-card puntos-card" id="puntos">
-        <svg class="hud-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-          <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
-        </svg>
-        <span class="hud-label">Puntos</span>
-        <span class="hud-valor">0</span>
-      </div>
-
-      <div class="hud-card vida-card" id="vida">
-        <!-- Icono de corazón bien formado (viewBox 24x24, mismo trazo que las demás tarjetas) -->
-        <svg class="hud-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
-        </svg>
-        <div class="vida-info">
-          <span class="hud-label">Vida</span>
-          <span class="hud-valor">120/120</span>
-        </div>
-        <div class="barra-vida">
-          <div class="relleno-vida" style="width: 100%"></div>
-        </div>
-      </div>
-
-      <div class="hud-card" id="vidas">
-        <svg class="hud-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-          <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-          <circle cx="9" cy="7" r="4"></circle>
-          <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
-          <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-        </svg>
-        <span class="hud-label">Vidas</span>
-        <span class="hud-valor">3</span>
-      </div>
-
-      <div class="hud-card" id="tiempo">
-        <svg class="hud-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-          <circle cx="12" cy="12" r="10"></circle>
-          <polyline points="12 6 12 12 16 14"></polyline>
-        </svg>
-        <span class="hud-label">Tiempo</span>
-        <span class="hud-valor">0s</span>
-      </div>
-
-      <!-- Ciclo actual -->
-      <div class="hud-card ciclo-card" id="ciclo">
-        <svg class="hud-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-          <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
-          <path d="M2 17l10 5 10-5"></path>
-          <path d="M2 12l10 5 10-5"></path>
-        </svg>
-        <span class="hud-label">Ciclo</span>
-        <span class="hud-valor">1</span>
-      </div>
-
-      <!-- Sub-jefes derrotados en ciclo actual (X/5) -->
-      <div class="hud-card subjefe-card" id="subjefes">
-        <svg class="hud-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-          <path d="M9 12l2 2 4-4"></path>
-          <circle cx="12" cy="12" r="10"></circle>
-        </svg>
-        <span class="hud-label">Sub-jefes</span>
-        <span class="hud-valor">0/5</span>
-      </div>
-
-      <!-- Tiempo restante para próximo sub-jefe -->
-      <div class="hud-card" id="tiempo-subjefe">
-        <svg class="hud-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-          <circle cx="12" cy="12" r="10"></circle>
-          <polyline points="12 6 12 12 16 14"></polyline>
-        </svg>
-        <span class="hud-label">Próximo sub-jefe</span>
-        <span class="hud-valor">1:30</span>
-      </div>
-
-      <!-- Barra de vida del sub-jefe (se muestra solo cuando hay uno activo) -->
-      <div class="hud-card subjefe-vida-card hidden" id="subjefe-vida">
-        <svg class="hud-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-          <path d="M20 6L9 17l-5-5"></path>
-        </svg>
-        <span class="hud-label">Jefe</span>
-        <div class="barra-vida">
-          <div class="relleno-vida subjefe-relleno" style="width: 100%"></div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Pantalla de inicio -->
-    <div id="pantalla-inicio" class="overlay active">
-      <div class="overlay-contenido">
-        <h1>Juego de Naves</h1>
-        <!-- Guía de controles: keycaps en CSS puro -->
-        <div class="guia-controles" role="group"
+        <!-- Guía de controles en partida (debajo del canvas, sin tapar el HUD) -->
+        <div class="guia-controles" id="guia-controles" role="group"
              aria-label="Controles: ← → Mover, ESPACIO Disparar. También se puede mover con A y D.">
           <span class="guia-item">
             <span class="teclas">
@@ -183,117 +57,250 @@
             <span class="guia-texto">Alternativa</span>
           </span>
         </div>
-        <button id="btn-jugar" class="btn-grande">Jugar</button>
-      </div>
-    </div>
 
-    <!-- Pantalla de historia estilo Star Wars (crawl) -->
-    <div id="pantalla-historia" class="overlay hidden">
-      <div class="crawl-container">
-        <!-- Frase inicial que se desvanece -->
-        <div class="crawl-frase" id="crawl-frase">
-          Hace mucho tiempo, en una galaxia muy lejana…
+        <!-- HUD inferior sci-fi/arcade -->
+        <div class="hud" id="hud">
+          <div class="hud-card puntos-card" id="puntos">
+            <svg class="hud-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+            </svg>
+            <span class="hud-label">Puntos</span>
+            <span class="hud-valor">0</span>
+          </div>
+
+          <div class="hud-card vida-card" id="vida">
+            <!-- Icono de corazón bien formado (viewBox 24x24, mismo trazo que las demás tarjetas) -->
+            <svg class="hud-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+            </svg>
+            <div class="vida-info">
+              <span class="hud-label">Vida</span>
+              <span class="hud-valor">120/120</span>
+            </div>
+            <div class="barra-vida">
+              <div class="relleno-vida" style="width: 100%"></div>
+            </div>
+          </div>
+
+          <div class="hud-card" id="vidas">
+            <svg class="hud-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+              <circle cx="9" cy="7" r="4"></circle>
+              <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+              <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+            </svg>
+            <span class="hud-label">Vidas</span>
+            <span class="hud-valor">3</span>
+          </div>
+
+          <div class="hud-card" id="tiempo">
+            <svg class="hud-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <circle cx="12" cy="12" r="10"></circle>
+              <polyline points="12 6 12 12 16 14"></polyline>
+            </svg>
+            <span class="hud-label">Tiempo</span>
+            <span class="hud-valor">0s</span>
+          </div>
+
+          <!-- Ciclo actual -->
+          <div class="hud-card ciclo-card" id="ciclo">
+            <svg class="hud-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
+              <path d="M2 17l10 5 10-5"></path>
+              <path d="M2 12l10 5 10-5"></path>
+            </svg>
+            <span class="hud-label">Ciclo</span>
+            <span class="hud-valor">1</span>
+          </div>
+
+          <!-- Sub-jefes derrotados en ciclo actual (X/5) -->
+          <div class="hud-card subjefe-card" id="subjefes">
+            <svg class="hud-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <path d="M9 12l2 2 4-4"></path>
+              <circle cx="12" cy="12" r="10"></circle>
+            </svg>
+            <span class="hud-label">Sub-jefes</span>
+            <span class="hud-valor">0/5</span>
+          </div>
+
+          <!-- Tiempo restante para próximo sub-jefe -->
+          <div class="hud-card" id="tiempo-subjefe">
+            <svg class="hud-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <circle cx="12" cy="12" r="10"></circle>
+              <polyline points="12 6 12 12 16 14"></polyline>
+            </svg>
+            <span class="hud-label">Próximo sub-jefe</span>
+            <span class="hud-valor">1:30</span>
+          </div>
+
+          <!-- Barra de vida del sub-jefe (se muestra solo cuando hay uno activo) -->
+          <div class="hud-card subjefe-vida-card hidden" id="subjefe-vida">
+            <svg class="hud-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <path d="M20 6L9 17l-5-5"></path>
+            </svg>
+            <span class="hud-label">Jefe</span>
+            <div class="barra-vida">
+              <div class="relleno-vida subjefe-relleno" style="width: 100%"></div>
+            </div>
+          </div>
         </div>
 
-        <!-- Título grande que se aleja -->
-        <div class="crawl-titulo" id="crawl-titulo">
-          LA ODISEA ESPACIAL
+        <!-- Pantalla de inicio -->
+        <div id="pantalla-inicio" class="overlay active">
+          <div class="overlay-contenido">
+            <h2>Juego de Naves</h2>
+            <!-- Guía de controles: keycaps en CSS puro -->
+            <div class="guia-controles" role="group"
+                 aria-label="Controles: ← → Mover, ESPACIO Disparar. También se puede mover con A y D.">
+              <span class="guia-item">
+                <span class="teclas">
+                  <kbd class="tecla">←</kbd>
+                  <kbd class="tecla">→</kbd>
+                </span>
+                <span class="guia-texto">Mover</span>
+              </span>
+              <span class="guia-item">
+                <kbd class="tecla tecla-ancha">ESPACIO</kbd>
+                <span class="guia-texto">Disparar</span>
+              </span>
+              <span class="guia-item">
+                <span class="teclas">
+                  <kbd class="tecla">A</kbd>
+                  <kbd class="tecla">D</kbd>
+                </span>
+                <span class="guia-texto">Alternativa</span>
+              </span>
+            </div>
+            <button id="btn-jugar" class="btn-grande">Jugar</button>
+          </div>
         </div>
 
-        <!-- Texto que sube con perspectiva 3D -->
-        <div class="crawl-texto" id="crawl-texto">
-          <p><strong>EPISODIO I: EL REGRESO A CASA.</strong></p>
-          <p>Tras la gran guerra interestelar, el comandante Odiseo emprende el camino de vuelta a la Tierra, su hogar. Pero en el espacio profundo lo espera el JEFE de la flota enemiga, decidido a impedir su regreso.</p>
-          <p>Odiseo se enfrenta a él en un combate desesperado… y lo derrota.</p>
-          <p>Sin embargo, la victoria tiene un precio: tras el jefe aparece un PELOTÓN de sub-jefes, cada uno más poderoso que el anterior. Con cada sub-jefe caído, la nave del comandante absorbe parte de su energía y se vuelve más fuerte… pero las naves enemigas también aprenden y regresan más resistentes en cada fase.</p>
-          <p>¿Lograrás llegar a casa?</p>
+        <!-- Pantalla de historia estilo Star Wars (crawl) -->
+        <div id="pantalla-historia" class="overlay hidden">
+          <div class="crawl-container">
+            <!-- Frase inicial que se desvanece -->
+            <div class="crawl-frase" id="crawl-frase">
+              Hace mucho tiempo, en una galaxia muy lejana…
+            </div>
+
+            <!-- Título grande que se aleja -->
+            <div class="crawl-titulo" id="crawl-titulo">
+              LA ODISEA ESPACIAL
+            </div>
+
+            <!-- Texto que sube con perspectiva 3D -->
+            <div class="crawl-texto" id="crawl-texto">
+              <p><strong>EPISODIO I: EL REGRESO A CASA.</strong></p>
+              <p>Tras la gran guerra interestelar, el comandante Odiseo emprende el camino de vuelta a la Tierra, su hogar. Pero en el espacio profundo lo espera el JEFE de la flota enemiga, decidido a impedir su regreso.</p>
+              <p>Odiseo se enfrenta a él en un combate desesperado… y lo derrota.</p>
+              <p>Sin embargo, la victoria tiene un precio: tras el jefe aparece un PELOTÓN de sub-jefes, cada uno más poderoso que el anterior. Con cada sub-jefe caído, la nave del comandante absorbe parte de su energía y se vuelve más fuerte… pero las naves enemigas también aprenden y regresan más resistentes en cada fase.</p>
+              <p>¿Lograrás llegar a casa?</p>
+            </div>
+
+            <!-- Botón saltar siempre visible -->
+            <button id="btn-saltar-intro" class="btn-saltar" aria-label="Saltar introducción">Saltar intro</button>
+          </div>
+
+          <div class="overlay-contenido crawl-botones">
+            <!-- Guía de controles antes de "Empezar viaje" -->
+            <div class="guia-controles" role="group"
+                 aria-label="Controles: ← → Mover, ESPACIO Disparar. También se puede mover con A y D.">
+              <span class="guia-item">
+                <span class="teclas">
+                  <kbd class="tecla">←</kbd>
+                  <kbd class="tecla">→</kbd>
+                </span>
+                <span class="guia-texto">Mover</span>
+              </span>
+              <span class="guia-item">
+                <kbd class="tecla tecla-ancha">ESPACIO</kbd>
+                <span class="guia-texto">Disparar</span>
+              </span>
+              <span class="guia-item">
+                <span class="teclas">
+                  <kbd class="tecla">A</kbd>
+                  <kbd class="tecla">D</kbd>
+                </span>
+                <span class="guia-texto">Alternativa</span>
+              </span>
+            </div>
+            <button id="btn-empezar-viaje" class="btn-grande" disabled>Empezar viaje</button>
+          </div>
         </div>
 
-        <!-- Botón saltar siempre visible -->
-        <button id="btn-saltar-intro" class="btn-saltar" aria-label="Saltar introducción">Saltar intro</button>
-      </div>
-
-      <div class="overlay-contenido crawl-botones">
-        <!-- Guía de controles antes de "Empezar viaje" -->
-        <div class="guia-controles" role="group"
-             aria-label="Controles: ← → Mover, ESPACIO Disparar. También se puede mover con A y D.">
-          <span class="guia-item">
-            <span class="teclas">
-              <kbd class="tecla">←</kbd>
-              <kbd class="tecla">→</kbd>
-            </span>
-            <span class="guia-texto">Mover</span>
-          </span>
-          <span class="guia-item">
-            <kbd class="tecla tecla-ancha">ESPACIO</kbd>
-            <span class="guia-texto">Disparar</span>
-          </span>
-          <span class="guia-item">
-            <span class="teclas">
-              <kbd class="tecla">A</kbd>
-              <kbd class="tecla">D</kbd>
-            </span>
-            <span class="guia-texto">Alternativa</span>
-          </span>
+        <!-- Pantalla de pausa -->
+        <div id="pantalla-pausa" class="overlay hidden">
+          <div class="overlay-contenido">
+            <h2>PAUSA</h2>
+            <!-- Guía de controles también en pausa -->
+            <div class="guia-controles" role="group"
+                 aria-label="Controles: ← → Mover, ESPACIO Disparar. También se puede mover con A y D.">
+              <span class="guia-item">
+                <span class="teclas">
+                  <kbd class="tecla">←</kbd>
+                  <kbd class="tecla">→</kbd>
+                </span>
+                <span class="guia-texto">Mover</span>
+              </span>
+              <span class="guia-item">
+                <kbd class="tecla tecla-ancha">ESPACIO</kbd>
+                <span class="guia-texto">Disparar</span>
+              </span>
+              <span class="guia-item">
+                <span class="teclas">
+                  <kbd class="tecla">A</kbd>
+                  <kbd class="tecla">D</kbd>
+                </span>
+                <span class="guia-texto">Alternativa</span>
+              </span>
+            </div>
+            <button id="btn-reanudar" class="btn-grande">Reanudar</button>
+          </div>
         </div>
-        <button id="btn-empezar-viaje" class="btn-grande" disabled>Empezar viaje</button>
-      </div>
-    </div>
 
-    <!-- Pantalla de pausa -->
-    <div id="pantalla-pausa" class="overlay hidden">
-      <div class="overlay-contenido">
-        <h1>PAUSA</h1>
-        <!-- Guía de controles también en pausa -->
-        <div class="guia-controles" role="group"
-             aria-label="Controles: ← → Mover, ESPACIO Disparar. También se puede mover con A y D.">
-          <span class="guia-item">
-            <span class="teclas">
-              <kbd class="tecla">←</kbd>
-              <kbd class="tecla">→</kbd>
-            </span>
-            <span class="guia-texto">Mover</span>
-          </span>
-          <span class="guia-item">
-            <kbd class="tecla tecla-ancha">ESPACIO</kbd>
-            <span class="guia-texto">Disparar</span>
-          </span>
-          <span class="guia-item">
-            <span class="teclas">
-              <kbd class="tecla">A</kbd>
-              <kbd class="tecla">D</kbd>
-            </span>
-            <span class="guia-texto">Alternativa</span>
-          </span>
+        <!-- Pantalla de Game Over -->
+        <div id="pantalla-gameover" class="overlay hidden">
+          <div class="overlay-contenido">
+            <h2>GAME OVER</h2>
+            <p id="score-final">Puntuación: 0</p>
+            <p id="tiempo-final">Tiempo sobrevivido: 0s</p>
+            <button id="btn-reiniciar" class="btn-grande">Jugar de nuevo</button>
+          </div>
         </div>
-        <button id="btn-reanudar" class="btn-grande">Reanudar</button>
+
+        <!-- Controles superiores (sonido y pausa) -->
+        <div class="controles-superiores">
+          <button id="btn-pausa" class="btn-control" aria-label="Pausar juego">⏸️</button>
+          <button id="btn-sonido" class="btn-control activo" aria-label="Activar/Desactivar sonido">🔊</button>
+        </div>
+
+        <!-- Aviso flotante (sub-jefe / jefe / bonos) -->
+        <div id="aviso-pantalla" class="aviso-flotante aviso-subjefe hidden"></div>
+
+        <!-- Aviso de vida restaurada al derrotar un sub-jefe o el jefe -->
+        <div id="aviso-curacion" class="aviso-flotante aviso-curacion hidden">¡VIDA RESTAURADA!</div>
+
       </div>
-    </div>
 
-    <!-- Pantalla de Game Over -->
-    <div id="pantalla-gameover" class="overlay hidden">
-      <div class="overlay-contenido">
-        <h1>GAME OVER</h1>
-        <p id="score-final">Puntuación: 0</p>
-        <p id="tiempo-final">Tiempo sobrevivido: 0s</p>
-        <button id="btn-reiniciar" class="btn-grande">Jugar de nuevo</button>
-      </div>
-    </div>
+      <script type="module" src="js/main.js"></script>
+    </section>
+  </main>
 
-    <!-- Controles superiores (sonido y pausa) -->
-    <div class="controles-superiores">
-      <button id="btn-pausa" class="btn-control" aria-label="Pausar juego">⏸️</button>
-      <button id="btn-sonido" class="btn-control activo" aria-label="Activar/Desactivar sonido">🔊</button>
-    </div>
+  <footer class="pie-sitio">
+    <p>Proyecto de Desarrollo de Aplicaciones Web · 2026</p>
+  </footer>
 
-    <!-- Aviso flotante (sub-jefe / jefe / bonos) -->
-    <div id="aviso-pantalla" class="aviso-flotante aviso-subjefe hidden"></div>
-
-    <!-- Aviso de vida restaurada al derrotar un sub-jefe o el jefe -->
-    <div id="aviso-curacion" class="aviso-flotante aviso-curacion hidden">¡VIDA RESTAURADA!</div>
-
-  </div>
-
-  <script type="module" src="js/main.js"></script>
+  <script>
+    // Menú hamburguesa
+    const btnMenu = document.getElementById('btn-menu');
+    const nav = document.getElementById('nav-principal');
+    if (btnMenu && nav) {
+      btnMenu.addEventListener('click', () => {
+        const abierto = btnMenu.getAttribute('aria-expanded') === 'true';
+        btnMenu.setAttribute('aria-expanded', String(!abierto));
+        nav.hidden = abierto;
+      });
+    }
+  </script>
 </body>
 </html>
